@@ -154,12 +154,16 @@
                 <div>
                     <strong th:text="${recommendation.destination}">부산</strong>
                     <div class="chips">
-                        <span class="chip" th:text="${recommendation.companionType}">친구</span>
-                        <span class="chip" th:text="${recommendation.budgetLevel}">중간</span>
-                        <span class="chip" th:text="${recommendation.travelStyle}">맛집</span>
-                        <span class="chip" th:text="${recommendation.season}">가을</span>
+                        <span class="chip" th:if="${recommendation.companionType != null and !#strings.isEmpty(recommendation.companionType)}" th:text="${recommendation.companionType}">친구</span>
+                        <span class="chip" th:if="${recommendation.budgetLevel != null and !#strings.isEmpty(recommendation.budgetLevel)}" th:text="${recommendation.budgetLevel}">중간</span>
+                        <span class="chip" th:if="${recommendation.travelStyle != null and !#strings.isEmpty(recommendation.travelStyle)}" th:text="${recommendation.travelStyle}">맛집</span>
+                        <span class="chip" th:if="${recommendation.season != null and !#strings.isEmpty(recommendation.season)}" th:text="${recommendation.season}">가을</span>
                     </div>
                     <p th:text="${recommendation.reason}">추천 이유</p>
+                    <p th:if="${recommendation.userPrompt != null and !#strings.isEmpty(recommendation.userPrompt)}"
+                       style="margin-top: 10px; font-size: 14px;">
+                        추가 요청: <span th:text="${recommendation.userPrompt}">조용한 여행</span>
+                    </p>
                 </div>
                 <a class="button" th:href="@{'/recommendations/' + ${recommendation.id} + '/result'}">결과 보기</a>
             </article>

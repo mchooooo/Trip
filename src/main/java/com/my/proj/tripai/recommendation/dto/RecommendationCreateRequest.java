@@ -1,15 +1,15 @@
 package com.my.proj.tripai.recommendation.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public record RecommendationCreateRequest(
-        @NotBlank(message = "동행 유형은 필수입니다.")
         String companionType,
-        @NotBlank(message = "예산 수준은 필수입니다.")
         String budgetLevel,
-        @NotBlank(message = "여행 스타일은 필수입니다.")
         String travelStyle,
-        @NotBlank(message = "여행 계절은 필수입니다.")
-        String season
+        String season,
+        @NotBlank(message = "추가 요청은 필수입니다.")
+        @Size(max = 500, message = "추가 요청은 500자 이하로 입력해주세요.")
+        String userPrompt
 ) {
 }

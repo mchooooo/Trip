@@ -146,6 +146,16 @@
             color: var(--muted);
         }
 
+        .request-box {
+            margin-top: 18px;
+            padding: 18px 20px;
+            border-radius: 18px;
+            background: rgba(21, 122, 110, 0.06);
+            border: 1px solid rgba(21, 122, 110, 0.1);
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
         @media (max-width: 860px) {
             .grid {
                 grid-template-columns: 1fr;
@@ -166,16 +176,20 @@
         <p class="summary" th:text="${recommendation.promptSummary}">추천 요약</p>
 
         <div class="chips">
-            <span class="chip" th:text="${recommendation.companionType}">친구</span>
-            <span class="chip" th:text="${recommendation.budgetLevel}">중간</span>
-            <span class="chip" th:text="${recommendation.travelStyle}">맛집</span>
-            <span class="chip" th:text="${recommendation.season}">가을</span>
+            <span class="chip" th:if="${recommendation.companionType != null and !#strings.isEmpty(recommendation.companionType)}" th:text="${recommendation.companionType}">친구</span>
+            <span class="chip" th:if="${recommendation.budgetLevel != null and !#strings.isEmpty(recommendation.budgetLevel)}" th:text="${recommendation.budgetLevel}">중간</span>
+            <span class="chip" th:if="${recommendation.travelStyle != null and !#strings.isEmpty(recommendation.travelStyle)}" th:text="${recommendation.travelStyle}">맛집</span>
+            <span class="chip" th:if="${recommendation.season != null and !#strings.isEmpty(recommendation.season)}" th:text="${recommendation.season}">가을</span>
         </div>
 
         <div class="grid">
             <article class="card">
                 <h2>추천 이유</h2>
                 <p th:text="${recommendation.reason}">추천 이유</p>
+                <div class="request-box" th:if="${recommendation.userPrompt != null and !#strings.isEmpty(recommendation.userPrompt)}">
+                    <strong style="display: block; margin-bottom: 8px; color: var(--ink);">사용자 추가 요청</strong>
+                    <span th:text="${recommendation.userPrompt}">추가 요청</span>
+                </div>
             </article>
 
             <aside class="meta">

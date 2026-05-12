@@ -10,6 +10,7 @@ public record RecommendationResponse(
         String budgetLevel,
         String travelStyle,
         String season,
+        String userPrompt,
         String promptSummary,
         String reason,
         LocalDateTime createdAt
@@ -22,6 +23,7 @@ public record RecommendationResponse(
                 recommendation.getBudgetLevel(),
                 recommendation.getTravelStyle(),
                 recommendation.getSeason(),
+                recommendation.getUserPrompt(),
                 recommendation.getPromptSummary(),
                 recommendation.getReason(),
                 recommendation.getCreatedAt()

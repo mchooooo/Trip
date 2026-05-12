@@ -286,7 +286,7 @@
             <span class="badge">TripAI MVP • Spring Boot + Thymeleaf</span>
             <h1>오늘 떠나기 좋은<br>여행지를 빠르게.</h1>
             <p class="lead">
-                동행, 예산, 스타일, 계절만 고르면 TripAI가 여행지 한 곳과 추천 이유를 바로 만들어줍니다.
+                자유 텍스트로 원하는 여행을 설명하고, 필요하면 동행·예산·스타일·계절을 추가로 골라 TripAI가 여행지 한 곳과 추천 이유를 바로 만들어줍니다.
                 지금은 백엔드 E2E 확인용으로 가장 가벼운 흐름에 집중하고 있어요.
             </p>
 
@@ -311,7 +311,7 @@
             <form th:action="@{/recommendations}" th:object="${recommendationForm}" method="post">
                 <div class="grid">
                     <div class="field">
-                        <label for="companionType">동행 유형</label>
+                        <label for="companionType">동행 유형 (선택)</label>
                         <select id="companionType" th:field="*{companionType}">
                             <option value="">선택해 주세요</option>
                             <option value="혼자">혼자</option>
@@ -319,22 +319,20 @@
                             <option value="연인">연인</option>
                             <option value="가족">가족</option>
                         </select>
-                        <div class="error" th:if="${#fields.hasErrors('companionType')}" th:errors="*{companionType}">동행 유형 오류</div>
                     </div>
 
                     <div class="field">
-                        <label for="budgetLevel">예산 수준</label>
+                        <label for="budgetLevel">예산 수준 (선택)</label>
                         <select id="budgetLevel" th:field="*{budgetLevel}">
                             <option value="">선택해 주세요</option>
                             <option value="낮음">낮음</option>
                             <option value="중간">중간</option>
                             <option value="높음">높음</option>
                         </select>
-                        <div class="error" th:if="${#fields.hasErrors('budgetLevel')}" th:errors="*{budgetLevel}">예산 오류</div>
                     </div>
 
                     <div class="field">
-                        <label for="travelStyle">여행 스타일</label>
+                        <label for="travelStyle">여행 스타일 (선택)</label>
                         <select id="travelStyle" th:field="*{travelStyle}">
                             <option value="">선택해 주세요</option>
                             <option value="휴양">휴양</option>
@@ -343,11 +341,10 @@
                             <option value="자연">자연</option>
                             <option value="힐링">힐링</option>
                         </select>
-                        <div class="error" th:if="${#fields.hasErrors('travelStyle')}" th:errors="*{travelStyle}">스타일 오류</div>
                     </div>
 
                     <div class="field">
-                        <label for="season">여행 계절</label>
+                        <label for="season">여행 계절 (선택)</label>
                         <select id="season" th:field="*{season}">
                             <option value="">선택해 주세요</option>
                             <option value="봄">봄</option>
@@ -355,13 +352,24 @@
                             <option value="가을">가을</option>
                             <option value="겨울">겨울</option>
                         </select>
-                        <div class="error" th:if="${#fields.hasErrors('season')}" th:errors="*{season}">계절 오류</div>
                     </div>
                 </div>
 
                 <div class="button-row">
                     <button type="submit" class="button primary">추천 생성하기</button>
                     <a class="button secondary" th:href="@{/recommendations/history}">히스토리 보기</a>
+                </div>
+
+                <div class="field" style="margin-top: 18px;">
+                    <label for="userPrompt">추가 요청사항</label>
+                    <textarea
+                            id="userPrompt"
+                            th:field="*{userPrompt}"
+                            rows="5"
+                            placeholder="예: 부모님 모시고 조용하고 걷기 편한 국내 여행지면 좋겠어요."
+                            style="width: 100%; padding: 14px 16px; border-radius: 16px; border: 1px solid rgba(31, 42, 33, 0.12); background: #fffefb; color: var(--ink); font-size: 15px; outline: none; resize: vertical; min-height: 120px;"
+                    ></textarea>
+                    <div class="error" th:if="${#fields.hasErrors('userPrompt')}" th:errors="*{userPrompt}">추가 요청 오류</div>
                 </div>
             </form>
         </section>
@@ -384,10 +392,10 @@
             <article class="card" th:each="recommendation : ${recentRecommendations}">
                 <strong th:text="${recommendation.destination}">부산</strong>
                 <div class="chips">
-                    <span class="chip" th:text="${recommendation.companionType}">친구</span>
-                    <span class="chip" th:text="${recommendation.budgetLevel}">중간</span>
-                    <span class="chip" th:text="${recommendation.travelStyle}">맛집</span>
-                    <span class="chip" th:text="${recommendation.season}">가을</span>
+                    <span class="chip" th:if="${recommendation.companionType != null and !#strings.isEmpty(recommendation.companionType)}" th:text="${recommendation.companionType}">친구</span>
+                    <span class="chip" th:if="${recommendation.budgetLevel != null and !#strings.isEmpty(recommendation.budgetLevel)}" th:text="${recommendation.budgetLevel}">중간</span>
+                    <span class="chip" th:if="${recommendation.travelStyle != null and !#strings.isEmpty(recommendation.travelStyle)}" th:text="${recommendation.travelStyle}">맛집</span>
+                    <span class="chip" th:if="${recommendation.season != null and !#strings.isEmpty(recommendation.season)}" th:text="${recommendation.season}">가을</span>
                 </div>
                 <p th:text="${recommendation.reason}">추천 이유</p>
                 <div class="button-row">

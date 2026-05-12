@@ -29,6 +29,7 @@ public class RecommendationService {
                 .budgetLevel(request.budgetLevel())
                 .travelStyle(request.travelStyle())
                 .season(request.season())
+                .userPrompt(request.userPrompt())
                 .promptSummary(draft.promptSummary())
                 .reason(draft.reason())
                 .createdAt(LocalDateTime.now())

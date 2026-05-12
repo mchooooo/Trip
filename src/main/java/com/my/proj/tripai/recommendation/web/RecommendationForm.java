@@ -2,6 +2,7 @@ package com.my.proj.tripai.recommendation.web;
 
 import com.my.proj.tripai.recommendation.dto.RecommendationCreateRequest;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,19 +12,19 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RecommendationForm {
 
-    @NotBlank(message = "동행 유형은 필수입니다.")
     private String companionType;
 
-    @NotBlank(message = "예산 수준은 필수입니다.")
     private String budgetLevel;
 
-    @NotBlank(message = "여행 스타일은 필수입니다.")
     private String travelStyle;
 
-    @NotBlank(message = "여행 계절은 필수입니다.")
     private String season;
 
+    @NotBlank(message = "추가 요청은 필수입니다.")
+    @Size(max = 500, message = "추가 요청은 500자 이하로 입력해주세요.")
+    private String userPrompt;
+
     public RecommendationCreateRequest toRequest() {
-        return new RecommendationCreateRequest(companionType, budgetLevel, travelStyle, season);
+        return new RecommendationCreateRequest(companionType, budgetLevel, travelStyle, season, userPrompt);
     }
 }

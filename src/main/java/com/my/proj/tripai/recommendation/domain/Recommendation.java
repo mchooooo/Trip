@@ -29,6 +29,8 @@ public class Recommendation {
 
     private String season;
 
+    private String userPrompt;
+
     private String promptSummary;
 
     private String reason;
@@ -42,6 +44,7 @@ public class Recommendation {
             String budgetLevel,
             String travelStyle,
             String season,
+            String userPrompt,
             String promptSummary,
             String reason,
             LocalDateTime createdAt
@@ -51,6 +54,7 @@ public class Recommendation {
         this.budgetLevel = budgetLevel;
         this.travelStyle = travelStyle;
         this.season = season;
+        this.userPrompt = userPrompt;
         this.promptSummary = promptSummary;
         this.reason = reason;
         this.createdAt = createdAt;

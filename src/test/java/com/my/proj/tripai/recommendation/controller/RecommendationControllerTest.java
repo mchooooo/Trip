@@ -40,6 +40,7 @@ class RecommendationControllerTest {
                 "중간",
                 "맛집",
                 "가을",
+                "부모님 모시고 조용한 곳이면 좋겠어요.",
                 "친구와 함께 중간 예산으로 맛집 여행을 가을에 가고 싶어 함",
                 "부산은 음식과 바다를 함께 즐기기 좋은 도시입니다.",
                 LocalDateTime.of(2026, 5, 8, 19, 0)
@@ -64,7 +65,8 @@ class RecommendationControllerTest {
                                   "companionType": "",
                                   "budgetLevel": "",
                                   "travelStyle": "",
-                                  "season": ""
+                                  "season": "",
+                                  "userPrompt": ""
                                 }
                                 """))
                 .andExpect(status().isBadRequest())
@@ -72,7 +74,8 @@ class RecommendationControllerTest {
                 .andExpect(jsonPath("$.error").value("Bad Request"))
                 .andExpect(jsonPath("$.message").value("요청 값이 올바르지 않습니다."))
                 .andExpect(jsonPath("$.path").value("/api/recommendations"))
-                .andExpect(jsonPath("$.fieldErrors.length()").value(4));
+                .andExpect(jsonPath("$.fieldErrors.length()").value(1))
+                .andExpect(jsonPath("$.fieldErrors[0].field").value("userPrompt"));
     }
 
     @Test
