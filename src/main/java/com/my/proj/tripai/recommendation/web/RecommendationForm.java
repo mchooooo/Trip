@@ -21,7 +21,7 @@ public class RecommendationForm {
     private String season;
 
     @NotBlank(message = "추가 요청은 필수입니다.")
-    @Size(max = 500, message = "추가 요청은 500자 이하로 입력해주세요.")
+    @Size(max = 200, message = "추가 요청은 200자 이하로 입력해주세요.")
     private String userPrompt;
 
     public RecommendationCreateRequest toRequest() {

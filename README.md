@@ -56,9 +56,9 @@ OpenAI API를 활용해 추천 결과와 추천 이유를 생성합니다.
 
 관련 코드는 아래에 있습니다.
 
-- [RecommendationAiClient.java](/Users/ch/study/side_project/tripAI/src/main/java/com/my/proj/tripai/recommendation/service/RecommendationAiClient.java)
-- [MockRecommendationAiClient.java](/Users/ch/study/side_project/tripAI/src/main/java/com/my/proj/tripai/recommendation/service/MockRecommendationAiClient.java)
-- [OpenAiRecommendationClient.java](/Users/ch/study/side_project/tripAI/src/main/java/com/my/proj/tripai/recommendation/service/OpenAiRecommendationClient.java)
+- [RecommendationAiClient.java](/src/main/src/main/java/com/my/proj/tripai/recommendation/service/RecommendationAiClient.java)
+- [MockRecommendationAiClient.java](/src/main/src/main/java/com/my/proj/tripai/recommendation/service/MockRecommendationAiClient.java)
+- [OpenAiRecommendationClient.java](/src/main/src/main/java/com/my/proj/tripai/recommendation/service/OpenAiRecommendationClient.java)
 
 ## Project Structure
 
@@ -141,6 +141,33 @@ Response
 }
 ```
 
+## Token Optimization
+
+OpenAI 호출 비용을 줄이기 위해 추천 생성 흐름에 아래 최적화를 적용했습니다.
+
+- `promptSummary`는 AI가 만들지 않고 서버에서 생성합니다.
+- `reason`은 짧은 문장으로 제한하고, 비거나 너무 길면 서버에서 보정합니다.
+- 선택형 입력은 프롬프트에 한글 자연어 대신 코드값으로 전달합니다.
+  - 예: `가족 -> FAMILY`, `중간 -> MID`, `힐링 -> HEALING`
+- 선택하지 않은 값은 프롬프트에서 아예 생략합니다.
+- `userPrompt`는 최대 200자로 제한하고, OpenAI에 전달할 때도 200자로 한 번 더 잘라 보냅니다.
+- OpenAI 프롬프트는 JSON 응답만 반환하도록 고정해 불필요한 출력 토큰을 줄였습니다.
+
+또한 같은 요청 재사용을 위해 2단계 캐시를 두었습니다.
+
+- `원문 기반 캐시`
+  - 선택값 + 정규화된 `userPrompt` 기준으로 조회합니다.
+- `태그 기반 캐시`
+  - `userPrompt`에서 추출한 태그를 기준으로 더 넓게 재사용합니다.
+- 둘 다 miss일 때만 OpenAI를 호출합니다.
+
+관련 코드는 아래에 있습니다.
+
+- [RecommendationService.java](/src/main/src/main/java/com/my/proj/tripai/recommendation/service/RecommendationService.java)
+- [OpenAiRecommendationClient.java](/src/main/src/main/java/com/my/proj/tripai/recommendation/service/OpenAiRecommendationClient.java)
+- [RecommendationRequestCacheKeyGenerator.java](/src/main/src/main/java/com/my/proj/tripai/recommendation/service/RecommendationRequestCacheKeyGenerator.java)
+- [UserPromptTagExtractor.java](/src/main/src/main/java/com/my/proj/tripai/recommendation/service/UserPromptTagExtractor.java)
+- [RecommendationCache.java](/src/main/src/main/java/com/my/proj/tripai/recommendation/domain/RecommendationCache.java)
 
 ## Test
 
@@ -152,5 +179,6 @@ Response
 
 - 현재 기본 `mock` 구현은 실제 AI 추론이 아니라 규칙 기반 예시 응답입니다.
 - OpenAI 응답은 JSON 문자열 형식으로 받도록 프롬프트를 구성해두었습니다.
-- OpenAI 호출 시 선택형 입력이 비어 있으면 내부적으로 `미입력`으로 프롬프트에 전달합니다.
+- OpenAI 호출 시 선택형 입력은 코드값으로 압축해 전달하고, 비어 있으면 프롬프트에서 생략합니다.
+- 추천 캐시는 `recommendation_cache` 테이블에 스냅샷 형태로 저장하며, 원문 기반 캐시와 태그 기반 캐시를 함께 사용합니다.
 - MVP 단계이므로 인증/인가, 사용자 계정, 운영 DB, 외부 여행 데이터 연동은 아직 포함하지 않았습니다.
